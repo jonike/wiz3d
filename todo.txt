@@ -1,0 +1,29 @@
+WIZ3D
+* Add ODE physics (or a simple collision lib)
+- Add texture.defaultfilter function (remove param from texture.load and object.load)
+- Add light.setambient and light.ambient
+- Add mesh animations
+* Add 2d functions
+* Add screen.print & screen.input functions
+- Add sprites
+- Add audio support (WAV and OGG)
+- Add UI library (https://github.com/vurtun/nuklear)
+- Make font & mesh loading routines more robust
+- Add mesh bound box
+- Replace light attenuation with radius
+- mesh_instantiate should share materials
+
+IDE
+- Fix dialogs
+* Finish menus
+- Add Run option
+- Remove stylebuf
+- Add tabs
+- Add tool & status bars
+- Add debugger
+
+COLLISION FUNCTIONS:
+- object_setactive(bool) // enables or disables geom and rigibody
+- object_setstatic(bool) // to defined a non-placeable geom (cannot have a rigidbody)
+- object_setcollision(type) // none, sphere, box, mesh
+- object_setcollisionoffset(x, y, z)
