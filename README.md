@@ -32,7 +32,7 @@ Then, from a Terminal go to the Wiz3D folder and run the build script:
 
 The executable file `wiz3d` will be created on the `_build` folder (it is a 64 bit binary).
 
-##Using Wiz3D
+## Using Wiz3D
 The runtime accepts one optional parameter with the name of the Lua script to run. If you don't provide the parameter, then the file `data/main.lua` will be run.
 
 The script folder is always set as the active directory when running a program, so all paths should be relative to this folder.
