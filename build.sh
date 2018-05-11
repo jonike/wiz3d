@@ -27,6 +27,9 @@ mv _CMAKE/ide _build/ide
 
 echo "running..."
 cd _build
-./wiz3d
+./wiz3d data/helloworld.lua
+./wiz3d data/rotatingcube.lua
+./wiz3d data/angel.lua
 
 echo "done."
+
