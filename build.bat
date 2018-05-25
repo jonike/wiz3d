@@ -26,6 +26,7 @@ move "_CMAKE\ide.exe" "_build"
 
 echo running...
 cd _build
-wiz3d.exe
-log.txt
+wiz3d.exe data/helloworld.lua
+wiz3d.exe data/rotatingcube.lua
+wiz3d.exe data/angel.lua
 pause
