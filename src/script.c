@@ -7,6 +7,7 @@
 
 int luaopen_camera(lua_State* l);
 int luaopen_color(lua_State* l);
+int luaopen_fog(lua_State* l);
 int luaopen_image(lua_State* l);
 int luaopen_input(lua_State* l);
 int luaopen_light(lua_State* l);
@@ -33,6 +34,7 @@ bool_t script_init()
   luaL_requiref(_lua_state, "math", luaopen_math, TRUE); lua_pop(_lua_state, 1);
   luaopen_camera(_lua_state);
   luaopen_color(_lua_state);
+  luaopen_fog(_lua_state);
   luaopen_image(_lua_state);
   luaopen_input(_lua_state);
   luaopen_light(_lua_state);
@@ -43,6 +45,7 @@ bool_t script_init()
   /* move constants into global namespace */
   luaL_dostring(_lua_state, "for k,v in pairs(camera) do if k:sub(1, 1) == \"_\" then _G[k]=v end end");
   luaL_dostring(_lua_state, "for k,v in pairs(color) do if k:sub(1, 1) == \"_\" then _G[k]=v end end");
+  luaL_dostring(_lua_state, "for k,v in pairs(fog) do if k:sub(1, 1) == \"_\" then _G[k]=v end end");
   luaL_dostring(_lua_state, "for k,v in pairs(image) do if k:sub(1, 1) == \"_\" then _G[k]=v end end");
   luaL_dostring(_lua_state, "for k,v in pairs(input) do if k:sub(1, 1) == \"_\" then _G[k]=v end end");
   luaL_dostring(_lua_state, "for k,v in pairs(light) do if k:sub(1, 1) == \"_\" then _G[k]=v end end");

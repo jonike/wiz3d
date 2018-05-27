@@ -2828,6 +2828,29 @@ fail:
 }
 
 
+static int _wrap_multiply(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  float arg2 ;
+  int result;
+  
+  SWIG_check_num_args("color_multiply",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("color_multiply",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("color_multiply",2,"float");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (float)lua_tonumber(L, 2);
+  result = (int)color_multiply(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static swig_lua_attribute swig_SwigModule_attributes[] = {
     {0,0,0}
 };
@@ -2855,6 +2878,7 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "blue", _wrap_blue},
     { "alpha", _wrap_alpha},
     { "changealpha", _wrap_changealpha},
+    { "multiply", _wrap_multiply},
     {0,0}
 };
 static swig_lua_class* swig_SwigModule_classes[]= {

@@ -3,6 +3,7 @@
 echo creating lua wrappers...
 stuff\swig.exe -lua -o src/wrap_camera.c stuff/camera.i
 stuff\swig.exe -lua -o src/wrap_color.c stuff/color.i
+stuff\swig.exe -lua -o src/wrap_fog.c stuff/fog.i
 stuff\swig.exe -lua -o src/wrap_image.c stuff/image.i
 stuff\swig.exe -lua -o src/wrap_input.c stuff/input.i
 stuff\swig.exe -lua -o src/wrap_light.c stuff/light.i
@@ -26,7 +27,10 @@ move "_CMAKE\ide.exe" "_build"
 
 echo running...
 cd _build
-wiz3d.exe data/helloworld.lua
-wiz3d.exe data/rotatingcube.lua
 wiz3d.exe data/angel.lua
+wiz3d.exe data/fog.lua
+wiz3d.exe data/helloworld.lua
+wiz3d.exe data/hoverbike.lua
+wiz3d.exe data/rotatingcube.lua
+wiz3d.exe data/specular.lua
 pause

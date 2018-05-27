@@ -47,7 +47,8 @@ int camera_create(int camera)
   camera_setclearcolor(camera, color_rgb(52, 73, 94));
   camera_setortho(camera, FALSE);
   camera_setfov(camera, 60);
-  camera_setrange(camera, 1, 1000);
+  camera_setmindistance(camera, 1);
+  camera_setmaxdistance(camera, 1000);
   camera_setposition(camera, 0, 0, 0);
   camera_setrotation(camera, 0, 0, 0);
 
@@ -213,16 +214,23 @@ float camera_fov(int camera)
   }
 }
 
-void camera_setrange(int camera, float near_, float far_)
+void camera_setmindistance(int camera, float distance)
 {
   if ( camera_exists(camera) )
   {
-    _cameras[camera]->range[0] = near_;
-    _cameras[camera]->range[1] = far_;
+    _cameras[camera]->range[0] = distance;
   }
 }
 
-float camera_rangenear(int camera)
+void camera_setmaxdistance(int camera, float distance)
+{
+  if ( camera_exists(camera) )
+  {
+    _cameras[camera]->range[1] = distance;
+  }
+}
+
+float camera_mindistance(int camera)
 {
   if ( camera_exists(camera) )
   {
@@ -234,7 +242,7 @@ float camera_rangenear(int camera)
   }
 }
 
-float camera_rangefar(int camera)
+float camera_maxdistance(int camera)
 {
   if ( camera_exists(camera) )
   {
@@ -345,7 +353,7 @@ void camera_move(int camera, float x, float y, float z)
     q = lquat_fromeuler(&vec);
     vec = lvec3(x, y, z);
     vec = lquat_mulvec3(&q, &vec);
-    vec = lvec3_add(&_cameras[camera]->position, &vec);
+    _cameras[camera]->position = lvec3_add(&_cameras[camera]->position, &vec);
   }
 }
 

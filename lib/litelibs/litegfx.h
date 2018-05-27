@@ -36,6 +36,9 @@ void lgfx_setprojection(const float* m);
 void lgfx_setmodelview(const float* m);
 void lgfx_setblend(lblend_t mode);
 void lgfx_setcolor(float r, float g, float b, float a);
+void lgfx_setemissive(float r, float g, float b);
+void lgfx_setspecular(float r, float g, float b);
+void lgfx_setshininess(unsigned char shininess);
 void lgfx_setusevertexcolor(int enable);
 void lgfx_setculling(int enable);
 void lgfx_setdepthwrite(int enable);
@@ -120,6 +123,9 @@ void lvert_drawindexed(const lvert_t* vertices, const unsigned short* indices, u
 #include <Windows.h>
 #endif
 #include <GL/gl.h>
+#ifdef _WIN32
+#include <GL/glext.h>
+#endif
 #endif
 
 #include <math.h>
@@ -172,6 +178,7 @@ void lgfx_setup3d(int width, int height) {
   glDepthFunc(GL_LEQUAL);
   glFogi(GL_FOG_MODE, GL_LINEAR);
   glFrontFace(GL_CW);
+  glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
   lgfx_setviewport(0, 0, width, height);
   lgfx_setorigin(0, 0);
   lgfx_setblend(BLEND_SOLID);
@@ -239,6 +246,24 @@ void lgfx_setblend(lblend_t mode)
 void lgfx_setcolor(float r, float g, float b, float a)
 {
   glColor4f(r, g, b, a);
+  // could be glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, &color);
+}
+
+void lgfx_setemissive(float r, float g, float b)
+{
+  float emissive[3] = {r, g, b};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emissive);
+}
+
+void lgfx_setspecular(float r, float g, float b)
+{
+  float specular[3] = {r, g, b};
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+}
+
+void lgfx_setshininess(unsigned char shininess)
+{
+  glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 }
 
 void lgfx_setusevertexcolor(int enable)
@@ -287,6 +312,7 @@ void lgfx_setlight(int num, float x, float y, float z, float w, float r, float g
   col[2] = b;
   glLightfv(GL_LIGHT0 + num, GL_POSITION, pos);
   glLightfv(GL_LIGHT0 + num, GL_DIFFUSE, col);
+  glLightfv(GL_LIGHT0 + num, GL_SPECULAR, col);
   glLightf(GL_LIGHT0 + num, GL_LINEAR_ATTENUATION, att);
 }
 

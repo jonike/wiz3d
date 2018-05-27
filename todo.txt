@@ -1,16 +1,22 @@
 WIZ3D
-* Add ODE physics (or a simple collision lib)
-- Add texture.defaultfilter function (remove param from texture.load and object.load)
-- Add light.setambient and light.ambient
-- Add mesh animations
+- Add skybox
+* Add more Vortex samples
+- Add lightmaps
+- Add sun light
+- Add spot lights
 * Add 2d functions
+- Add more primitives (sphere, cone, cylinder, ramp)
+- Replace light attenuation with radius & check that specular is correct
+* Add ODE physics (or a simple collision lib)
+- Add mesh animations
 * Add screen.print & screen.input functions
 - Add sprites
 - Add audio support (WAV and OGG)
 - Add UI library (https://github.com/vurtun/nuklear)
 - Make font & mesh loading routines more robust
-- Add mesh bound box
-- Replace light attenuation with radius
+- Add mesh bounding box
+- Add memory functions
+- Create mesh from memory
 - mesh_instantiate should share materials
 
 IDE

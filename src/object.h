@@ -17,7 +17,7 @@ extern "C"
 /*int object_create(int object);*/
 int object_createcube(int object);
 int object_createtriangle(int object);
-int object_load(int object, const char* filename, bool_t image_filtering);
+int object_load(int object, const char* filename);
 int object_instantiate(int object, int from);
 void object_delete(int object);
 bool_t object_exists(int object);
@@ -49,12 +49,20 @@ void object_setimage(int object, int buffer, int image);
 int object_image(int object, int buffer);
 void object_setcolor(int object, int buffer, int color);
 int object_color(int object, int buffer);
+void object_setemissive(int object, int buffer, int color);
+int object_emissive(int object, int buffer);
+void object_setspecular(int object, int buffer, int color);
+int object_specular(int object, int buffer);
+void object_setshininess(int object, int buffer, float shininess);
+float object_shininess(int object, int buffer);
 void object_setculling(int object, int buffer, bool_t culling);
 bool_t object_culling(int object, int buffer);
 void object_setdepthwriting(int object, int buffer, bool_t depthwriting);
 bool_t object_depthwriting(int object, int buffer);
 void object_setlighting(int object, int buffer, bool_t lighting);
 bool_t object_lighting(int object, int buffer);
+void object_setfog(int object, int buffer, bool_t fog);
+bool_t object_fog(int object, int buffer);
 
 #ifndef SWIG
 bool_t _object_bufferexists(int object, int buffer);

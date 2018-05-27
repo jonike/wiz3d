@@ -7,10 +7,6 @@
 #include "util.h"
 #include <string.h>
 
-#define FLAG_CULL       1
-#define FLAG_DEPTHWRITE 2
-#define FLAG_LIGHTING   4
-
 struct object_s
 {
   char            name[STRING_SIZE];
@@ -140,7 +136,7 @@ int object_createtriangle(int object)
   return object;
 }
 
-int object_load(int object, const char* filename, bool_t image_filtering)
+int object_load(int object, const char* filename)
 {
   struct mesh_s* mesh;
 
@@ -165,7 +161,7 @@ int object_load(int object, const char* filename, bool_t image_filtering)
   if ( object == -1 ) return -1;
 
   /* load mesh */
-  mesh = mesh_load(filename, image_filtering);
+  mesh = mesh_load(filename);
   if ( !mesh ) return -1;
 
   /* create object */
@@ -425,7 +421,7 @@ void object_move(int object, float x, float y, float z)
     q = lquat_fromeuler(&vec);
     vec = lvec3(x, y, z);
     vec = lquat_mulvec3(&q, &vec);
-    vec = lvec3_add(&_objects[object]->position, &vec);
+    _objects[object]->position = lvec3_add(&_objects[object]->position, &vec);
   }
 }
 
@@ -513,6 +509,66 @@ int object_color(int object, int buffer)
   }
 }
 
+void object_setemissive(int object, int buffer, int color)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    mesh_setemissive(_objects[object]->mesh, buffer, color);
+  }
+}
+
+int object_emissive(int object, int buffer)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    return mesh_emissive(_objects[object]->mesh, buffer);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+void object_setspecular(int object, int buffer, int color)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    mesh_setspecular(_objects[object]->mesh, buffer, color);
+  }
+}
+
+int object_specular(int object, int buffer)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    return mesh_specular(_objects[object]->mesh, buffer);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+void object_setshininess(int object, int buffer, float shininess)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    mesh_setshininess(_objects[object]->mesh, buffer, clamp(shininess, 0, 1));
+  }
+}
+
+float object_shininess(int object, int buffer)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    return mesh_shininess(_objects[object]->mesh, buffer);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
 void object_setculling(int object, int buffer, bool_t culling)
 {
   if ( _object_bufferexists(object, buffer) )
@@ -522,14 +578,14 @@ void object_setculling(int object, int buffer, bool_t culling)
       mesh_setflags(
         _objects[object]->mesh,
         buffer,
-        mesh_flags(_objects[object]->mesh, buffer) | FLAG_CULL);
+        mesh_flags(_objects[object]->mesh, buffer) | _FLAG_CULL);
     }
     else if ( !culling && object_culling(object, buffer) )
     {
       mesh_setflags(
         _objects[object]->mesh,
         buffer,
-        mesh_flags(_objects[object]->mesh, buffer) - FLAG_CULL);
+        mesh_flags(_objects[object]->mesh, buffer) - _FLAG_CULL);
     }
   }
 }
@@ -538,7 +594,7 @@ bool_t object_culling(int object, int buffer)
 {
   if ( _object_bufferexists(object, buffer) )
   {
-    return (mesh_flags(_objects[object]->mesh, buffer) & FLAG_CULL) == FLAG_CULL;
+    return (mesh_flags(_objects[object]->mesh, buffer) & _FLAG_CULL) == _FLAG_CULL;
   }
   else
   {
@@ -555,14 +611,14 @@ void object_setdepthwriting(int object, int buffer, bool_t depthwriting)
       mesh_setflags(
         _objects[object]->mesh,
         buffer,
-        mesh_flags(_objects[object]->mesh, buffer) | FLAG_DEPTHWRITE);
+        mesh_flags(_objects[object]->mesh, buffer) | _FLAG_DEPTHWRITE);
     }
     else if ( !depthwriting && object_depthwriting(object, buffer) )
     {
       mesh_setflags(
         _objects[object]->mesh,
         buffer,
-        mesh_flags(_objects[object]->mesh, buffer) - FLAG_DEPTHWRITE);
+        mesh_flags(_objects[object]->mesh, buffer) - _FLAG_DEPTHWRITE);
     }
   }
 }
@@ -571,7 +627,7 @@ bool_t object_depthwriting(int object, int buffer)
 {
   if ( _object_bufferexists(object, buffer) )
   {
-    return (mesh_flags(_objects[object]->mesh, buffer) & FLAG_DEPTHWRITE) == FLAG_DEPTHWRITE;
+    return (mesh_flags(_objects[object]->mesh, buffer) & _FLAG_DEPTHWRITE) == _FLAG_DEPTHWRITE;
   }
   else
   {
@@ -588,14 +644,14 @@ void object_setlighting(int object, int buffer, bool_t lighting)
       mesh_setflags(
         _objects[object]->mesh,
         buffer,
-        mesh_flags(_objects[object]->mesh, buffer) | FLAG_LIGHTING);
+        mesh_flags(_objects[object]->mesh, buffer) | _FLAG_LIGHTING);
     }
     else if ( !lighting && object_depthwriting(object, buffer) )
     {
       mesh_setflags(
         _objects[object]->mesh,
         buffer,
-        mesh_flags(_objects[object]->mesh, buffer) - FLAG_LIGHTING);
+        mesh_flags(_objects[object]->mesh, buffer) - _FLAG_LIGHTING);
     }
   }
 }
@@ -604,7 +660,40 @@ bool_t object_lighting(int object, int buffer)
 {
   if ( _object_bufferexists(object, buffer) )
   {
-    return (mesh_flags(_objects[object]->mesh, buffer) & FLAG_LIGHTING) == FLAG_LIGHTING;
+    return (mesh_flags(_objects[object]->mesh, buffer) & _FLAG_LIGHTING) == _FLAG_LIGHTING;
+  }
+  else
+  {
+    return FALSE;
+  }
+}
+
+void object_setfog(int object, int buffer, bool_t fog)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    if ( fog )
+    {
+      mesh_setflags(
+        _objects[object]->mesh,
+        buffer,
+        mesh_flags(_objects[object]->mesh, buffer) | _FLAG_FOG);
+    }
+    else if ( !fog && object_fog(object, buffer) )
+    {
+      mesh_setflags(
+        _objects[object]->mesh,
+        buffer,
+        mesh_flags(_objects[object]->mesh, buffer) - _FLAG_FOG);
+    }
+  }
+}
+
+bool_t object_fog(int object, int buffer)
+{
+  if ( _object_bufferexists(object, buffer) )
+  {
+    return (mesh_flags(_objects[object]->mesh, buffer) & _FLAG_FOG) == _FLAG_FOG;
   }
   else
   {

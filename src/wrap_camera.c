@@ -3008,20 +3008,17 @@ fail:
 }
 
 
-static int _wrap_setrange(lua_State* L) {
+static int _wrap_setmindistance(lua_State* L) {
   int SWIG_arg = 0;
   int arg1 ;
   float arg2 ;
-  float arg3 ;
   
-  SWIG_check_num_args("camera_setrange",3,3)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_setrange",1,"int");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("camera_setrange",2,"float");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("camera_setrange",3,"float");
+  SWIG_check_num_args("camera_setmindistance",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_setmindistance",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("camera_setmindistance",2,"float");
   arg1 = (int)lua_tonumber(L, 1);
   arg2 = (float)lua_tonumber(L, 2);
-  arg3 = (float)lua_tonumber(L, 3);
-  camera_setrange(arg1,arg2,arg3);
+  camera_setmindistance(arg1,arg2);
   
   return SWIG_arg;
   
@@ -3033,15 +3030,37 @@ fail:
 }
 
 
-static int _wrap_rangenear(lua_State* L) {
+static int _wrap_setmaxdistance(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  float arg2 ;
+  
+  SWIG_check_num_args("camera_setmaxdistance",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_setmaxdistance",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("camera_setmaxdistance",2,"float");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (float)lua_tonumber(L, 2);
+  camera_setmaxdistance(arg1,arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_mindistance(lua_State* L) {
   int SWIG_arg = 0;
   int arg1 ;
   float result;
   
-  SWIG_check_num_args("camera_rangenear",1,1)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_rangenear",1,"int");
+  SWIG_check_num_args("camera_mindistance",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_mindistance",1,"int");
   arg1 = (int)lua_tonumber(L, 1);
-  result = (float)camera_rangenear(arg1);
+  result = (float)camera_mindistance(arg1);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -3053,15 +3072,15 @@ fail:
 }
 
 
-static int _wrap_rangefar(lua_State* L) {
+static int _wrap_maxdistance(lua_State* L) {
   int SWIG_arg = 0;
   int arg1 ;
   float result;
   
-  SWIG_check_num_args("camera_rangefar",1,1)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_rangefar",1,"int");
+  SWIG_check_num_args("camera_maxdistance",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("camera_maxdistance",1,"int");
   arg1 = (int)lua_tonumber(L, 1);
-  result = (float)camera_rangefar(arg1);
+  result = (float)camera_maxdistance(arg1);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -3328,9 +3347,10 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "ortho", _wrap_ortho},
     { "setfov", _wrap_setfov},
     { "fov", _wrap_fov},
-    { "setrange", _wrap_setrange},
-    { "rangenear", _wrap_rangenear},
-    { "rangefar", _wrap_rangefar},
+    { "setmindistance", _wrap_setmindistance},
+    { "setmaxdistance", _wrap_setmaxdistance},
+    { "mindistance", _wrap_mindistance},
+    { "maxdistance", _wrap_maxdistance},
     { "setposition", _wrap_setposition},
     { "x", _wrap_x},
     { "y", _wrap_y},

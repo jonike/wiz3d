@@ -2722,17 +2722,14 @@ static int _wrap_load(lua_State* L) {
   int SWIG_arg = 0;
   int arg1 ;
   char *arg2 = (char *) 0 ;
-  bool_t arg3 ;
   int result;
   
-  SWIG_check_num_args("object_load",3,3)
+  SWIG_check_num_args("object_load",2,2)
   if(!lua_isnumber(L,1)) SWIG_fail_arg("object_load",1,"int");
   if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("object_load",2,"char const *");
-  if(!lua_isboolean(L,3)) SWIG_fail_arg("object_load",3,"bool_t");
   arg1 = (int)lua_tonumber(L, 1);
   arg2 = (char *)lua_tostring(L, 2);
-  arg3 = (lua_toboolean(L, 3)!=0);
-  result = (int)object_load(arg1,(char const *)arg2,arg3);
+  result = (int)object_load(arg1,(char const *)arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -3374,6 +3371,150 @@ fail:
 }
 
 
+static int _wrap_setemissive(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  int arg3 ;
+  
+  SWIG_check_num_args("object_setemissive",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_setemissive",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_setemissive",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("object_setemissive",3,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (int)lua_tonumber(L, 3);
+  object_setemissive(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_emissive(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  int result;
+  
+  SWIG_check_num_args("object_emissive",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_emissive",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_emissive",2,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (int)object_emissive(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_setspecular(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  int arg3 ;
+  
+  SWIG_check_num_args("object_setspecular",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_setspecular",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_setspecular",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("object_setspecular",3,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (int)lua_tonumber(L, 3);
+  object_setspecular(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_specular(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  int result;
+  
+  SWIG_check_num_args("object_specular",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_specular",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_specular",2,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (int)object_specular(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_setshininess(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  float arg3 ;
+  
+  SWIG_check_num_args("object_setshininess",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_setshininess",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_setshininess",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("object_setshininess",3,"float");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (float)lua_tonumber(L, 3);
+  object_setshininess(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_shininess(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  float result;
+  
+  SWIG_check_num_args("object_shininess",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_shininess",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_shininess",2,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (float)object_shininess(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_setculling(lua_State* L) {
   int SWIG_arg = 0;
   int arg1 ;
@@ -3518,6 +3659,54 @@ fail:
 }
 
 
+static int _wrap_setfog(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  bool_t arg3 ;
+  
+  SWIG_check_num_args("object_setfog",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_setfog",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_setfog",2,"int");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("object_setfog",3,"bool_t");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (lua_toboolean(L, 3)!=0);
+  object_setfog(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_fog(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  int arg2 ;
+  bool_t result;
+  
+  SWIG_check_num_args("object_fog",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("object_fog",1,"int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("object_fog",2,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (bool_t)object_fog(arg1,arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static swig_lua_attribute swig_SwigModule_attributes[] = {
     {0,0,0}
 };
@@ -3560,12 +3749,20 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "image", _wrap_image},
     { "setcolor", _wrap_setcolor},
     { "color", _wrap_color},
+    { "setemissive", _wrap_setemissive},
+    { "emissive", _wrap_emissive},
+    { "setspecular", _wrap_setspecular},
+    { "specular", _wrap_specular},
+    { "setshininess", _wrap_setshininess},
+    { "shininess", _wrap_shininess},
     { "setculling", _wrap_setculling},
     { "culling", _wrap_culling},
     { "setdepthwriting", _wrap_setdepthwriting},
     { "depthwriting", _wrap_depthwriting},
     { "setlighting", _wrap_setlighting},
     { "lighting", _wrap_lighting},
+    { "setfog", _wrap_setfog},
+    { "fog", _wrap_fog},
     {0,0}
 };
 static swig_lua_class* swig_SwigModule_classes[]= {

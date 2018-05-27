@@ -14,6 +14,7 @@ struct light_s
 };
 
 static struct light_s* _lights[NUM_LIGHTS] = { NULL };
+static int _light_ambient = 0;
 
 int light_create(int light, int type)
 {
@@ -220,7 +221,7 @@ void light_move(int light, float x, float y, float z)
     q = lquat_fromeuler(&vec);
     vec = lvec3(x, y, z);
     vec = lquat_mulvec3(&q, &vec);
-    vec = lvec3_add(&_lights[light]->position, &vec);
+    _lights[light]->position = lvec3_add(&_lights[light]->position, &vec);
   }
 }
 
@@ -278,4 +279,18 @@ bool_t _light_prepare(int light, const lmat4_t* view_matrix)
   {
     return FALSE;
   }
+}
+
+void light_setambient(int color)
+{
+  _light_ambient = color;
+  lgfx_setambient(
+    color_red(color) / 255.0f,
+    color_green(color) / 255.0f,
+    color_blue(color) / 255.0f);
+}
+
+int light_ambient()
+{
+  return _light_ambient;
 }

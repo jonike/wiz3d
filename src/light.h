@@ -30,6 +30,8 @@ void light_setattenuation(int light, float att);
 float light_attenuation(int light);
 void light_move(int light, float x, float y, float z);
 void light_turn(int light, float pitch, float yaw, float roll);
+void light_setambient(int color);
+int light_ambient();
 
 #ifndef SWIG
 bool_t _light_prepare(int light, const lmat4_t* view_matrix);

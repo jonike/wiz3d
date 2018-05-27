@@ -29,6 +29,7 @@ int color_green(int color);
 int color_blue(int color);
 int color_alpha(int color);
 int color_changealpha(int color, int new_alpha);
+int color_multiply(int color, float factor);
 
 #ifdef __cplusplus
 } /* extern "C" */

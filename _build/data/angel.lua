@@ -11,10 +11,10 @@ camera.setrotation(0, 37.5, -45, 0)
 camera.setclearcolor(0, color.rgb(15, 15, 15))
 
 -- load object
-object.load(0, "angel.msh", true)
+object.load(0, "angel.msh")
 
 -- setup lighting
---light.setambient(color.rgb(15, 15, 15))
+light.setambient(color.rgb(15, 15, 15))
 light.setcolor(0, color.rgb(100, 100, 100))
 light.create(1, _LIGHT_POINT)
 light.setposition(1, 0, 0, -2)

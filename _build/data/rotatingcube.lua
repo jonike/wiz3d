@@ -1,7 +1,7 @@
 ROTATION_SPEED = 90
 
 -- load image
-image.load(0, "box-texture.png", true)
+image.load(0, "box-texture.png")
 
 -- create a cube
 object.createcube(0)
@@ -13,4 +13,3 @@ while screen.opened() and not input.keydown(_KEY_ESC) do
   screen.drawtext(math.floor(screen.fps()) .. " FPS", 4, 4)
   screen.sync()
 end
-

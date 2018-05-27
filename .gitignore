@@ -3,6 +3,7 @@ _CMAKE
 *log.txt
 _build/wiz3d*
 _build/ide*
+src/wrap_*.c
 
 
 # Created by https://www.gitignore.io/api/windows,linux,osx

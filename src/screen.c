@@ -113,7 +113,7 @@ void screen_sync()
   _screen_draws = NULL;
 
   /* draw prints */
-  print_y = 0;
+  print_y = 2;
   for ( i = 0; i < sb_count(_screen_prints); ++i )
   {
     lgfx_setcolor(

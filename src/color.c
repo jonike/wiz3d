@@ -33,3 +33,12 @@ int color_changealpha(int color, int new_alpha)
 {
   return (new_alpha << 24) | (color & 0x00ffffff);
 }
+
+int color_multiply(int color, float factor)
+{
+  return color_rgba(
+    (int)(color_red(color) * factor),
+    (int)(color_green(color) * factor),
+    (int)(color_blue(color) * factor),
+    color_alpha(color));
+}

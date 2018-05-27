@@ -1,3 +1,5 @@
+#include "color.h"
+#include "light.h"
 #include "platform.h"
 #include "screen.h"
 #include "wiz3d.h"
@@ -20,6 +22,7 @@ bool_t wiz3d_init()
   if ( p_init() )
   {
     _physics_init();
+    light_setambient(_COLOR_DARKGRAY);
     return TRUE;
   }
   else

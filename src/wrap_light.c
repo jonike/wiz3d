@@ -3067,6 +3067,42 @@ fail:
 }
 
 
+static int _wrap_setambient(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  
+  SWIG_check_num_args("light_setambient",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("light_setambient",1,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  light_setambient(arg1);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ambient(lua_State* L) {
+  int SWIG_arg = 0;
+  int result;
+  
+  SWIG_check_num_args("light_ambient",0,0)
+  result = (int)light_ambient();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static swig_lua_attribute swig_SwigModule_attributes[] = {
     {0,0,0}
 };
@@ -3094,6 +3130,8 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "attenuation", _wrap_attenuation},
     { "move", _wrap_move},
     { "turn", _wrap_turn},
+    { "setambient", _wrap_setambient},
+    { "ambient", _wrap_ambient},
     {0,0}
 };
 static swig_lua_class* swig_SwigModule_classes[]= {

@@ -2683,19 +2683,16 @@ static int _wrap_create(lua_State* L) {
   int arg1 ;
   int arg2 ;
   int arg3 ;
-  bool_t arg4 ;
   int result;
   
-  SWIG_check_num_args("image_create",4,4)
+  SWIG_check_num_args("image_create",3,3)
   if(!lua_isnumber(L,1)) SWIG_fail_arg("image_create",1,"int");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("image_create",2,"int");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("image_create",3,"int");
-  if(!lua_isboolean(L,4)) SWIG_fail_arg("image_create",4,"bool_t");
   arg1 = (int)lua_tonumber(L, 1);
   arg2 = (int)lua_tonumber(L, 2);
   arg3 = (int)lua_tonumber(L, 3);
-  arg4 = (lua_toboolean(L, 4)!=0);
-  result = (int)image_create(arg1,arg2,arg3,arg4);
+  result = (int)image_create(arg1,arg2,arg3);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -2711,17 +2708,14 @@ static int _wrap_load(lua_State* L) {
   int SWIG_arg = 0;
   int arg1 ;
   char *arg2 = (char *) 0 ;
-  bool_t arg3 ;
   int result;
   
-  SWIG_check_num_args("image_load",3,3)
+  SWIG_check_num_args("image_load",2,2)
   if(!lua_isnumber(L,1)) SWIG_fail_arg("image_load",1,"int");
   if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("image_load",2,"char const *");
-  if(!lua_isboolean(L,3)) SWIG_fail_arg("image_load",3,"bool_t");
   arg1 = (int)lua_tonumber(L, 1);
   arg2 = (char *)lua_tostring(L, 2);
-  arg3 = (lua_toboolean(L, 3)!=0);
-  result = (int)image_load(arg1,(char const *)arg2,arg3);
+  result = (int)image_load(arg1,(char const *)arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -2812,6 +2806,25 @@ fail:
 }
 
 
+static int _wrap_setfilter(lua_State* L) {
+  int SWIG_arg = 0;
+  bool_t arg1 ;
+  
+  SWIG_check_num_args("image_setfilter",1,1)
+  if(!lua_isboolean(L,1)) SWIG_fail_arg("image_setfilter",1,"bool_t");
+  arg1 = (lua_toboolean(L, 1)!=0);
+  image_setfilter(arg1);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static swig_lua_attribute swig_SwigModule_attributes[] = {
     {0,0,0}
 };
@@ -2825,6 +2838,7 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "exists", _wrap_exists},
     { "width", _wrap_width},
     { "height", _wrap_height},
+    { "setfilter", _wrap_setfilter},
     {0,0}
 };
 static swig_lua_class* swig_SwigModule_classes[]= {

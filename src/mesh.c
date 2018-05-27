@@ -2,6 +2,7 @@
 #include "../lib/litelibs/litemath3d.h"
 #include "../lib/stretchy_buffer.h"
 #include "color.h"
+#include "fog.h"
 #include "image.h"
 #include "mesh.h"
 #include "screen.h"
@@ -9,10 +10,15 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_SHININESS 8
+
 struct material_s
 {
   int image;
   int color;
+  int emissive;
+  int specular;
+  float shininess;
   int blend;
   int flags;
 };
@@ -57,7 +63,7 @@ struct mesh_s* mesh_create()
   return mesh;
 }
 
-struct mesh_s* mesh_load(const char* filename, bool_t image_filtering)
+struct mesh_s* mesh_load(const char* filename)
 {
   FILE* f;
   size_t filenamelen;
@@ -92,7 +98,7 @@ struct mesh_s* mesh_load(const char* filename, bool_t image_filtering)
   {
     struct mshmaterial_s mat;
     int image = -1;
-    int flags = 0;
+    int flags = _FLAG_ALL;
     int numindices;
     unsigned short numvertices;
     unsigned char vertexflags;
@@ -100,6 +106,10 @@ struct mesh_s* mesh_load(const char* filename, bool_t image_filtering)
 
     /* read material */
     fread(&mat, sizeof(mat), 1, f);
+
+    /* parse flags */
+    if ( (mat.flags & _FLAG_CULL) == 0 ) flags -= _FLAG_CULL;
+    if ( (mat.flags & _FLAG_DEPTHWRITE) == 0 ) flags -= _FLAG_DEPTHWRITE;
 
     /* read textures */
     if ( mat.usedtexs & 1 ) /* color texture */
@@ -111,35 +121,35 @@ struct mesh_s* mesh_load(const char* filename, bool_t image_filtering)
       str[filenamelen+len] = 0;
       strcpy(str, path);
       fread(str + filenamelen, sizeof(char), len, f);
-      image = image_load(-1, str, image_filtering);
+      image = image_load(-1, str);
       free(str);
     }
-    else if ( mat.usedtexs & 2 ) /* normal tex */
+    if ( mat.usedtexs & 2 ) /* normal tex */
     {
       fread(&len, sizeof(len), 1, f);
       fseek(f, len, SEEK_CUR);
     }
-    else if ( mat.usedtexs & 4 ) /* specular tex */
+    if ( mat.usedtexs & 4 ) /* specular tex */
     {
       fread(&len, sizeof(len), 1, f);
       fseek(f, len, SEEK_CUR);
     }
-    else if ( mat.usedtexs & 8 ) /* emissive tex */
+    if ( mat.usedtexs & 8 ) /* emissive tex */
     {
       fread(&len, sizeof(len), 1, f);
       fseek(f, len, SEEK_CUR);
     }
-    else if ( mat.usedtexs & 16 ) /* ambient tex */
+    if ( mat.usedtexs & 16 ) /* ambient tex */
     {
       fread(&len, sizeof(len), 1, f);
       fseek(f, len, SEEK_CUR);
     }
-    else if ( mat.usedtexs & 32 ) /* lightmap */
+    if ( mat.usedtexs & 32 ) /* lightmap */
     {
       fread(&len, sizeof(len), 1, f);
       fseek(f, len, SEEK_CUR);
     }
-    else if ( mat.usedtexs & 64 ) /* cubemap */
+    if ( mat.usedtexs & 64 ) /* cubemap */
     {
       fread(&len, sizeof(len), 1, f);
       fseek(f, len, SEEK_CUR);
@@ -154,8 +164,11 @@ struct mesh_s* mesh_load(const char* filename, bool_t image_filtering)
     buffer = mesh_addbuffer(mesh);
     mesh_setimage(mesh, buffer, image);
     mesh_setcolor(mesh, buffer, mat.color);
+    mesh_setemissive(mesh, buffer, mat.emissive);
+    mesh_setspecular(mesh, buffer, mat.specular);
+    mesh_setshininess(mesh, buffer, color_alpha(mat.specular) / 255.0f);
     mesh_setblend(mesh, buffer, mat.blendmode);
-    mesh_setflags(mesh, buffer, mat.flags);
+    mesh_setflags(mesh, buffer, flags);
 
     /* read indices */
     for ( j = 0; j < numindices; j += 3 )
@@ -229,8 +242,11 @@ int mesh_addbuffer(struct mesh_s* mesh)
   buffer = sb_add(mesh->buffers, 1);
   buffer->material.image = -1;
   buffer->material.color = _COLOR_WHITE;
+  buffer->material.emissive = _COLOR_BLACK;
+  buffer->material.specular = _COLOR_WHITE;
+  buffer->material.shininess = 0;
   buffer->material.blend = 0;
-  buffer->material.flags = 3;
+  buffer->material.flags = _FLAG_ALL;
   buffer->vertices = NULL;
   buffer->indices = NULL;
 
@@ -279,6 +295,36 @@ int mesh_color(struct mesh_s* mesh, int buffer)
   return mesh->buffers[buffer].material.color;
 }
 
+void mesh_setemissive(struct mesh_s* mesh, int buffer, int color)
+{
+  mesh->buffers[buffer].material.emissive = color;
+}
+
+int mesh_emissive(struct mesh_s* mesh, int buffer)
+{
+  return mesh->buffers[buffer].material.emissive;
+}
+
+void mesh_setspecular(struct mesh_s* mesh, int buffer, int color)
+{
+  mesh->buffers[buffer].material.specular = color;
+}
+
+int mesh_specular(struct mesh_s* mesh, int buffer)
+{
+  return mesh->buffers[buffer].material.specular;
+}
+
+void mesh_setshininess(struct mesh_s* mesh, int buffer, float shininess)
+{
+  mesh->buffers[buffer].material.shininess = shininess;
+}
+
+float mesh_shininess(struct mesh_s* mesh, int buffer)
+{
+  return mesh->buffers[buffer].material.shininess;
+}
+
 void mesh_setblend(struct mesh_s* mesh, int buffer, int blend)
 {
   mesh->buffers[buffer].material.blend = blend;
@@ -305,6 +351,9 @@ void _mesh_draw(struct mesh_s* mesh)
 
   for ( i = 0; i < sb_count(mesh->buffers); ++i )
   {
+    int specular;
+
+    specular = color_multiply(mesh_specular(mesh, i), mesh_shininess(mesh, i));
     lgfx_setblend(mesh_blend(mesh, i));
     ltex_bindcolor(_image_ptr(mesh_image(mesh, i)));
     lgfx_setcolor(
@@ -312,10 +361,34 @@ void _mesh_draw(struct mesh_s* mesh)
       color_green(mesh_color(mesh, i)) / 255.0,
       color_blue(mesh_color(mesh, i)) / 255.0,
       color_alpha(mesh_color(mesh, i)) / 255.0);
-    lgfx_setculling((mesh_flags(mesh, i) & 1) == 1);
-    lgfx_setdepthwrite((mesh_flags(mesh, i) & 2) == 2);
-    if ( (mesh_flags(mesh, i) & 3) == 3 ) _screen_setlighting();
+    lgfx_setemissive(
+      color_red(mesh_emissive(mesh, i)) / 255.0,
+      color_green(mesh_emissive(mesh, i)) / 255.0,
+      color_blue(mesh_emissive(mesh, i)) / 255.0);
+    lgfx_setspecular(
+      color_red(specular) / 255.0,
+      color_green(specular) / 255.0,
+      color_blue(specular) / 255.0);
+    lgfx_setshininess(mesh_shininess(mesh, i) * MAX_SHININESS);
+    lgfx_setculling((mesh_flags(mesh, i) & _FLAG_CULL) == _FLAG_CULL);
+    lgfx_setdepthwrite((mesh_flags(mesh, i) & _FLAG_DEPTHWRITE) == _FLAG_DEPTHWRITE);
+    if ( (mesh_flags(mesh, i) & _FLAG_LIGHTING) == _FLAG_LIGHTING ) _screen_setlighting();
     else lgfx_setlighting(FALSE, 0);
+    if ( (mesh_flags(mesh, i) & _FLAG_FOG) == _FLAG_FOG )
+    {
+      lgfx_setfog(
+        fog_enabled(),
+        color_red(fog_color()) / 255.0f,
+        color_green(fog_color()) / 255.0f,
+        color_blue(fog_color()) / 255.0f,
+        fog_mindistance(),
+        fog_maxdistance()
+      );
+    }
+    else
+    {
+      lgfx_setfog(FALSE, 0, 0, 0, 0, 0);
+    }
     lvert_drawindexed(
       mesh->buffers[i].vertices,
       mesh->buffers[i].indices,

@@ -4,6 +4,7 @@ cd `dirname $0`
 echo "creating lua wrappers..."
 swig -lua -o src/wrap_camera.c stuff/camera.i
 swig -lua -o src/wrap_color.c stuff/color.i
+swig -lua -o src/wrap_fog.c stuff/fog.i
 swig -lua -o src/wrap_image.c stuff/image.i
 swig -lua -o src/wrap_input.c stuff/input.i
 swig -lua -o src/wrap_light.c stuff/light.i
@@ -27,6 +28,11 @@ mv _CMAKE/ide _build/ide
 
 echo "running..."
 cd _build
-./wiz3d
+./wiz3d data/angel.lua
+./wiz3d data/fog.lua
+./wiz3d data/helloworld.lua
+./wiz3d data/hoverbike.lua
+./wiz3d data/rotatingcube.lua
+./wiz3d data/specular.lua
 
 echo "done."

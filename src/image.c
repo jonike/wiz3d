@@ -3,8 +3,9 @@
 #include "image.h"
 
 static ltex_t* _images[NUM_IMAGES] = { NULL };
+static bool_t _image_filtering = TRUE;
 
-int image_create(int image, int width, int height, bool_t filtering)
+int image_create(int image, int width, int height)
 {
   /* delete previous image if it exists */
   if ( image_exists(image) ) image_delete(image);
@@ -27,12 +28,12 @@ int image_create(int image, int width, int height, bool_t filtering)
   if ( image == -1 ) return -1;
 
   /* create image */
-  _images[image] = ltex_alloc(width, height, filtering);
+  _images[image] = ltex_alloc(width, height, _image_filtering);
 
   return image;
 }
 
-int image_load(int image, const char* filename, bool_t filtering)
+int image_load(int image, const char* filename)
 {
   unsigned char* buffer;
   int w, h;
@@ -42,7 +43,7 @@ int image_load(int image, const char* filename, bool_t filtering)
   if ( !buffer ) return -1;
 
   /* create image */
-  image = image_create(image, w, h, filtering);
+  image = image_create(image, w, h);
   if ( image != -1 ) ltex_setpixels(_images[image], buffer);
 
   /* delete buffer */
@@ -94,6 +95,11 @@ int image_height(int image)
   {
     return 0;
   }
+}
+
+void image_setfilter(bool_t filter)
+{
+  _image_filtering = filter;
 }
 
 const void* _image_ptr(int image)
